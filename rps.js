@@ -3,13 +3,13 @@ let numPlayerWins = 0;
 let numComputerWins = 0;
 
 function game() {
-  let playerSelection;
-  let computerSelection;
 
   for (let i = 0; i < 5; i++) {                                      
-    // playRound() 
-    let playerSelection = prompt('Rock, Paper, or Scissors?');       
-    let computerSelection = computerPlay();
+    let roundData = playRound();
+    let playerSelection = roundData['player'];
+    let computerSelection = roundData['computer'];
+    let resultsMessage = roundData['result'];
+
 
     alert(`You chose ${playerSelection}, computer chose ${computerSelection}`);
     alert(determineRoundWinner(playerSelection, computerSelection));
@@ -24,6 +24,18 @@ function game() {
   } else {
     alert("It's a tie!");
   }
+}
+
+function playRound() {
+  let playerSelection = prompt('Rock, Paper, or Scissors?');        
+  let computerSelection = computerPlay();
+  let roundResults = determineRoundWinner(playerSelection, computerSelection);
+
+
+  return { 'player': playerSelection, 
+           'computer': computerSelection, 
+           'result': roundResults, 
+         }
 }
 
 function computerPlay() {
