@@ -1,39 +1,30 @@
 const choices = ['Rock', 'Paper', 'Scissors'];
 let numPlayerWins = 0;
 let numComputerWins = 0;
+let playerSelection;
 
-function game() {
+const buttons = document.querySelectorAll('button');
+buttons.forEach((button) => {
+  button.addEventListener('click', () => {
+    playerSelection = button.id[0].toUpperCase() + button.id.substring(1);    
 
-  while (numPlayerWins < 5 &&  numComputerWins < 5) {                                      
-    let roundData = playRound();
-    let playerSelection = roundData['player'];
-    let computerSelection = roundData['computer'];
-    let resultsMessage = roundData['result'];
+    if (numPlayerWins < 5 && numComputerWins < 5) {
+      playRound(playerSelection);
+    } else {
+      announceWinner();
+    }
+  });
+}); 
 
-
-    alert(`You chose ${playerSelection}, computer chose ${computerSelection}`);
-    alert(resultsMessage);
-
-  alert(`player: ${numPlayerWins}, computer: ${numComputerWins}`);
-  }                                                                         
-  if (numPlayerWins > numComputerWins) {
-    alert("You won!");
-  } else if (numPlayerWins < numComputerWins) {
-    alert("You lost :(");
-  } else {
-    alert("It's a tie!");
-  }
-}
-
-function playRound() {
-  let playerSelection = prompt('Rock, Paper, or Scissors?');        
+function playRound(playerSelection) {
   let computerSelection = computerPlay();
   let roundResults = determineRoundWinner(playerSelection, computerSelection);
 
-  return { 'player': playerSelection, 
-           'computer': computerSelection, 
-           'result': roundResults, 
-         }
+  const results = document.querySelector('#results');
+  results.textContent = roundResults;
+
+  const scoreboard = document.querySelector('#scoreboard');
+  scoreboard.textContent = `Player: ${numPlayerWins}, Computer: ${numComputerWins}`;
 }
 
 function computerPlay() {
@@ -41,23 +32,23 @@ function computerPlay() {
 }
 
 function determineRoundWinner(playerSelection, computerSelection) {
-  let message;
+  let message = `You chose ${playerSelection}. Computer chose ${computerSelection}. `
 
   if (playerSelection === 'Rock') {
 
     switch (computerSelection) {
       case 'Rock': 
-        message = "It's a tie!";
+        message += "It's a tie!";
         break;
 
       case 'Paper': 
         numComputerWins += 1; 
-        message = "Paper beats Rock, you lose.";
+        message += "Paper beats Rock, you lose.";
         break;
 
       case 'Scissors': 
         numPlayerWins += 1;
-        message = "Rock beats Scissors, you win!";
+        message += "Rock beats Scissors, you win!";
         break;
     }
 
@@ -66,16 +57,16 @@ function determineRoundWinner(playerSelection, computerSelection) {
     switch (computerSelection) {                                     
       case 'Rock': 
         numPlayerWins += 1;
-        message = "Paper beats Rock, you win!";
+        message += "Paper beats Rock, you win!";
         break;
                                                                      
       case 'Paper': 
-        message = "It's a tie!";
+        message += "It's a tie!";
         break;
                                                                     
       case 'Scissors': 
         numComputerWins += 1;
-        message = "Scissors beat Paper, you lose.";
+        message += "Scissors beat Paper, you lose.";
         break;
     }
   } else if (playerSelection === 'Scissors') {
@@ -83,16 +74,16 @@ function determineRoundWinner(playerSelection, computerSelection) {
     switch (computerSelection) {
       case 'Rock': 
         numComputerWins += 1;
-        message = "Rock beats Scissors, you lose.";
+        message += "Rock beats Scissors, you lose.";
         break;
                                                                      
       case 'Paper': 
         numPlayerWins += 1;
-        message = "Scissors beat Paper, you win!";
+        message += "Scissors beat Paper, you win!";
         break;
                                                                      
       case 'Scissors': 
-        message = "It's a tie!";
+        message += "It's a tie!";
         break;
     }
   }
@@ -100,4 +91,20 @@ function determineRoundWinner(playerSelection, computerSelection) {
   return message;
 }
 
-game();
+function announceWinner() {
+  let message;
+
+  if (numPlayerWins > numComputerWins) {
+    message = "You won!";
+  } else if (numPlayerWins < numComputerWins) {
+    message = "You lost :(";
+  } else {
+    message = "It's a tie!";                        
+  }
+
+  const results = document.querySelector('#results');
+  results.textContent = '';
+  
+  const scoreboard = document.querySelector('#scoreboard');
+  scoreboard.textContent = message;
+}
